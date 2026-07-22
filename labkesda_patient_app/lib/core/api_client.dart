@@ -96,7 +96,7 @@ class ApiResult {
     Map<String, dynamic> json;
     try {
       json = jsonDecode(res.body) as Map<String, dynamic>;
-    } catch {
+    } catch (e) {
       json = {};
     }
     final success = res.statusCode >= 200 && res.statusCode < 300 && (json['success'] ?? false);
