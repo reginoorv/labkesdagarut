@@ -37,8 +37,11 @@ Cari `andi@example.com` (muncul 2×) → ganti dengan email Anda.
 ### 2.1 Buat akun
 1. Buka https://codemagic.io → **Sign up** (gratis).
 2. Login dengan **GitHub / GitLab / Bitbucket** yang berisi repo Anda.
-3. Free tier: **500 menit build/bulan** di Mac + unlimited Linux — cukup untuk
-   project ini (1 build Android ≈ 5 menit, iOS ≈ 15 menit).
+3. Free tier: **500 menit build/bulan di Mac mini M2** — cukup untuk
+   project ini (1 build Android ≈ 10 menit, iOS ≈ 15 menit).
+   ⚠️ Free plan **hanya menyediakan instance macOS M2** — Linux/Windows
+   berbayar. Karena itu workflow Android juga memakai `mac_mini_m2`
+   (build APK di Mac tetap bisa dan sama hasilnya).
 
 ### 2.2 Hubungkan repo
 1. Dashboard → **Add application**.
