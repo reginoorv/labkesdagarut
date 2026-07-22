@@ -50,4 +50,5 @@ yarn-debug.log*
 yarn-error.log*
 
 # Temp
+.temp/upload/*.zip
 *.tmp
