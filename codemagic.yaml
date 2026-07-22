@@ -21,9 +21,15 @@ workflows:
       - name: Generate Android project skeleton
         script: |
           # lib/ & pubspec.yaml sudah di-commit; flutter create mengisi
-          # folder android/, ios/, web/, dll tanpa menimpa file yang ada.
+          # folder android/, ios/, web/, dll.
           cd labkesda_patient_app
           flutter create . --project-name labkesda_patient_app --org id.go.garut.labkesda
+          # PENTING: flutter create MENIMPA AndroidManifest.xml dengan template
+          # default yang TIDAK punya izin INTERNET di build release. Tanpa ini,
+          # APK tidak bisa akses jaringan sama sekali ("Tidak dapat terhubung ke
+          # server"). Kembalikan versi commit kita (INTERNET + cleartext HTTP).
+          git checkout -- android/app/src/main/AndroidManifest.xml
+          echo "=== Manifest setelah restore ===" && cat android/app/src/main/AndroidManifest.xml
       - name: Get dependencies
         script: |
           cd labkesda_patient_app
