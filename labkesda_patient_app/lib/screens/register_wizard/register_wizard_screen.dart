@@ -26,6 +26,7 @@ class _RegisterWizardScreenState extends State<RegisterWizardScreen> {
   final _name = TextEditingController();
   final _phone = TextEditingController();
   DateTime? _dob;
+  DateTime? _visitDate;
   String _gender = 'L';
   final _notes = TextEditingController();
 
@@ -50,7 +51,7 @@ class _RegisterWizardScreenState extends State<RegisterWizardScreen> {
       case 1:
         return _city != null && _district != null && _address.text.trim().isNotEmpty;
       case 2:
-        return _selected.isNotEmpty && (!_purposeRequired || _purpose.text.trim().isNotEmpty);
+        return _visitDate != null && _selected.isNotEmpty && (!_purposeRequired || _purpose.text.trim().isNotEmpty);
       default:
         return true;
     }
@@ -67,6 +68,7 @@ class _RegisterWizardScreenState extends State<RegisterWizardScreen> {
       'dob': _dob!.toIso8601String().split('T').first,
       'gender': _gender,
       'phone': _phone.text.trim(),
+      'visitDate': (_visitDate ?? DateTime.now()).toIso8601String().split('T').first,
       'address': _address.text.trim(),
       'province': _province,
       'city': _city,
@@ -322,6 +324,28 @@ class _RegisterWizardScreenState extends State<RegisterWizardScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        InkWell(
+          onTap: () async {
+            final picked = await showDatePicker(
+              context: context,
+              initialDate: _visitDate ?? DateTime.now(),
+              firstDate: DateTime.now(),
+              lastDate: DateTime.now().add(const Duration(days: 90)),
+            );
+            if (picked != null) setState(() => _visitDate = picked);
+          },
+          child: InputDecorator(
+            decoration: const InputDecoration(
+              labelText: 'Tanggal Kunjungan *',
+              suffixIcon: Icon(Icons.event_outlined, size: 18),
+            ),
+            child: Text(
+              _visitDate == null ? 'Pilih tanggal kunjungan' : '${_visitDate!.day}/${_visitDate!.month}/${_visitDate!.year}',
+              style: TextStyle(color: _visitDate == null ? AppColors.textMuted : AppColors.textMain, fontSize: 14),
+            ),
+          ),
+        ),
+        const SizedBox(height: 16),
         Text('Pilih satu atau lebih pemeriksaan:', style: Theme.of(context).textTheme.bodySmall),
         const SizedBox(height: 10),
         ...testCategories.map((c) {
@@ -372,6 +396,7 @@ class _RegisterWizardScreenState extends State<RegisterWizardScreen> {
             _row('RT/RW', _rtRw.text.isEmpty ? '-' : _rtRw.text),
             const Divider(height: 20),
             _row('Pemeriksaan', names),
+            _row('Tgl Kunjungan', _visitDate == null ? '-' : '${_visitDate!.day}/${_visitDate!.month}/${_visitDate!.year}'),
             if (_purpose.text.isNotEmpty) _row('Keperluan', _purpose.text),
           ],
         ),
