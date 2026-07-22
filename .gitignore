@@ -19,6 +19,12 @@ build/
 labkesda_patient_app/build/
 labkesda_patient_app/.dart_tool/
 labkesda_patient_app/android/
+# Kecuali manifest yang berisi permission INTERNET + cleartext (CI butuh ini)
+!labkesda_patient_app/android/
+!labkesda_patient_app/android/app/
+!labkesda_patient_app/android/app/src/
+!labkesda_patient_app/android/app/src/main/
+!labkesda_patient_app/android/app/src/main/AndroidManifest.xml
 labkesda_patient_app/ios/
 labkesda_patient_app/web/
 labkesda_patient_app/macos/
