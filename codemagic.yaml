@@ -1,0 +1,92 @@
+workflows:
+  # ─────────────────────────────────────────────────────────────
+  # WORKFLOW 1: Android APK (debug-signed, langsung bisa install)
+  # ─────────────────────────────────────────────────────────────
+  android-apk:
+    name: Android APK (Install Langsung)
+    instance_type: linux_x2
+    max_build_duration: 45
+    environment:
+      flutter: stable
+      groups:
+        - api_config   # isi API_BASE_URL di Codemagic UI
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: "main"
+          include: true
+          source: true
+    scripts:
+      - name: Generate Android project skeleton
+        script: |
+          # lib/ & pubspec.yaml sudah di-commit; flutter create mengisi
+          # folder android/, ios/, web/, dll tanpa menimpa file yang ada.
+          cd labkesda_patient_app
+          flutter create . --project-name labkesda_patient_app --org id.go.garut.labkesda
+      - name: Get dependencies
+        script: |
+          cd labkesda_patient_app
+          flutter pub get
+      - name: Analyze (opsional, tidak gagalkan build)
+        script: |
+          cd labkesda_patient_app
+          flutter analyze --no-fatal-infos --no-fatal-warnings || true
+      - name: Build APK
+        script: |
+          cd labkesda_patient_app
+          flutter build apk --release --dart-define=API_BASE_URL=$API_BASE_URL
+    artifacts:
+      - labkesda_patient_app/build/app/outputs/flutter-apk/*.apk
+    publishing:
+      email:
+        recipients:
+          - giereg1998@gmail.com   # GANTI dengan email Anda
+        notify:
+          success: true
+          failure: true
+
+  # ─────────────────────────────────────────────────────────────
+  # WORKFLOW 2: iOS IPA (unsigned — untuk tester sendiri butuh
+  # code signing, lihat tutorial di meta/docs)
+  # ─────────────────────────────────────────────────────────────
+  ios-ipa:
+    name: iOS IPA
+    instance_type: mac_mini_m2
+    max_build_duration: 60
+    environment:
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+      groups:
+        - api_config
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: "main"
+          include: true
+          source: true
+    scripts:
+      - name: Generate iOS project skeleton
+        script: |
+          cd labkesda_patient_app
+          flutter create . --project-name labkesda_patient_app --org id.go.garut.labkesda
+      - name: Get dependencies
+        script: |
+          cd labkesda_patient_app
+          flutter pub get
+      - name: Build IPA (no code signing)
+        script: |
+          cd labkesda_patient_app
+          flutter build ipa --release --no-codesign --dart-define=API_BASE_URL=$API_BASE_URL
+    artifacts:
+      - labkesda_patient_app/build/ios/archive/*.xcarchive
+      - labkesda_patient_app/build/ios/ipa/*.ipa
+    publishing:
+      email:
+        recipients:
+          - giereg1998@gmail.com   # GANTI
+        notify:
+          success: true
+          failure: true

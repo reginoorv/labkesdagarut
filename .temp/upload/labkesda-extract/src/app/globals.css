@@ -1,0 +1,154 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #0F6E5A;
+  --color-primary-dark: #0B5445;
+  --color-primary-soft: #E4F2EE;
+  --color-neutral-base: #F7F7F6;
+  --color-neutral-surface: #FFFFFF;
+  --color-neutral-text: #1C1C1C;
+  --color-neutral-subtext: #6B6B6B;
+  --color-border-custom: #E5E5E3;
+  
+  --color-status-normal: #1B8A5A;
+  --color-status-pending: #E8A33D;
+  --color-status-kritis: #D64545;
+  --color-status-duplo: #3B7DD8;
+}
+
+:root {
+  --bg-app: #F7F7F6;
+  --surface: #FFFFFF;
+  --text-main: #1C1C1C;
+  --text-muted: #6B6B6B;
+  --border: #E5E5E3;
+  --primary: #0F6E5A;
+  --primary-hover: #0B5445;
+  --primary-soft: #E4F2EE;
+  
+  --status-normal: #1B8A5A;
+  --status-pending: #E8A33D;
+  --status-kritis: #D64545;
+  --status-duplo: #3B7DD8;
+}
+
+body {
+  background-color: var(--bg-app);
+  color: var(--text-main);
+  font-family: var(--font-inter), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Tabular numbers for numbers and metrics */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Custom scrollbars for data-dense tables */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f1f0;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd0d5;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #9fa6ad;
+}
+
+/* Subtle pulse for critical flags */
+@keyframes critical-pulse {
+  0%, 100% {
+    opacity: 1;
+    box-shadow: 0 0 0 0 rgba(214, 69, 69, 0.4);
+  }
+  50% {
+    opacity: 0.85;
+    box-shadow: 0 0 0 4px rgba(214, 69, 69, 0);
+  }
+}
+
+.pulse-critical {
+  animation: critical-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Subtle highlight flash for newly inserted/urgent rows */
+@keyframes flash-highlight {
+  0% { background-color: #FDECEC; }
+  100% { background-color: transparent; }
+}
+
+.flash-new {
+  animation: flash-highlight 1.5s ease-out forwards;
+}
+
+/* Print CSS setup for LIS Label */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #printable-label-area, #printable-label-area * {
+    visibility: visible;
+  }
+  #printable-label-area {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    max-height: none !important;
+    overflow: visible !important;
+    background: #fff !important;
+    border: none !important;
+    padding: 0 !important;
+    gap: 0 !important;
+    display: block !important;
+  }
+  #printable-label-area .label-card {
+    margin: 6mm auto;
+    box-shadow: none !important;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+}
+
+/* Print CSS untuk dokumen A4 (surat hasil lab & invoice) */
+@media print {
+  #printable-doc, #printable-doc * {
+    visibility: visible;
+  }
+  #printable-doc {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    background: #fff !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+}
+@page {
+  margin: 14mm;
+}
+
+/* Print CSS untuk struk thermal 80mm (invoice kasir) */
+@media print {
+  #printable-thermal, #printable-thermal * {
+    visibility: visible;
+  }
+  #printable-thermal {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 80mm !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 2mm !important;
+    background: #fff !important;
+  }
+}

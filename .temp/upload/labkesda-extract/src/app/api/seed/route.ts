@@ -1,0 +1,20 @@
+import { NextResponse } from "next/server";
+import { ensureSeedData } from "@/db/seed";
+
+export async function GET() {
+  try {
+    await ensureSeedData();
+    return NextResponse.json({ success: true, message: "Database check/seed completed." });
+  } catch (error: any) {
+    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+  }
+}
+
+export async function POST() {
+  try {
+    await ensureSeedData();
+    return NextResponse.json({ success: true, message: "Database check/seed completed." });
+  } catch (error: any) {
+    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+  }
+}
