@@ -23,8 +23,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
   bool _loading = false;
   String? _error;
   String? _devOtp; // ditampilkan saat dev (server mengembalikannya bila non-production)
+  String? _testResult; // hasil tes koneksi (diagnostik)
   int _resendIn = 0;
   Timer? _timer;
+
+  Future<void> _testConnection() async {
+    setState(() => _testResult = 'Menguji...');
+    final res = await ApiClient.get('/api/letterhead');
+    if (!mounted) return;
+    setState(() {
+      _testResult = res.ok
+          ? 'OK: server terjangkau (HTTP ${res.statusCode})'
+          : 'Gagal: HTTP ${res.statusCode} — ${res.error}';
+    });
+  }
 
   @override
   void dispose() {
@@ -201,6 +213,35 @@ class _RegisterScreenState extends State<RegisterScreen> {
               TextButton(
                 onPressed: () => Navigator.pushReplacementNamed(context, '/login'),
                 child: const Text('Sudah punya akun? Masuk dengan PIN', style: TextStyle(color: AppColors.primary)),
+              ),
+
+              // Diagnostik koneksi (sementara untuk troubleshooting)
+              const SizedBox(height: 12),
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: AppColors.bg,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: AppColors.border),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Server: ${ApiClient.baseUrl}',
+                        style: const TextStyle(fontSize: 11, color: AppColors.textMuted)),
+                    const SizedBox(height: 6),
+                    GestureDetector(
+                      onTap: _testConnection,
+                      child: Text(
+                        _testResult ?? 'Tes koneksi ke server →',
+                        style: const TextStyle(
+                            fontSize: 12,
+                            color: AppColors.primary,
+                            fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),

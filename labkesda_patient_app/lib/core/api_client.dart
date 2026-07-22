@@ -112,6 +112,6 @@ class ApiResult {
         ok: false,
         statusCode: 0,
         data: {},
-        error: 'Tidak dapat terhubung ke server. Periksa koneksi internet Anda.',
+        error: 'Tidak dapat terhubung ke server.\n[$e]',
       );
 }
